@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Historikoki</title>
+    <style>
+        body { font-family: Arial, sans-serif; color: #141212dd; background-color: #1cad8eaa}
+        h1 { text-align: center; color: #000000; }
+        h2 { font-size:20px; color: rgb(0, 0, 0)}
+        .txikia {
+            width: 150px;
+            cursor: pointer;
+        }
+
+        .handia {
+            width: 400px;
+        }
+        
+    </style>
+    </style>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+
+<h1>Historikoki</h1>
+<nav>
+    <a href="Sarrera.html">Sarrera</a>
+    <a href="Lehena.html">Gaur egun</a>
+    <a href="Hirugarrena.html">Lorpenak</a>
+</nav>
+<h2>Irudia</h2>
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdooTrzgOd0-EK0Tw0M-pX4PTyxP0G1hE_uA&s" alt="Irudi txikia" onclick="handitu(this)" class="txikia">
+
+<script>
+    function handitu(irudia) {
+        if (irudia.classList.contains("txikia")) {
+            irudia.classList.remove("txikia");
+            irudia.classList.add("handia");
+        } else {
+            irudia.classList.remove("handia");
+            irudia.classList.add("txikia");
+        }
+    }
+</script>
+<h2>Bideoa</h2>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/V5ub0IWEYUM?si=bY7V29GjDqmRwyRn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<h2>Audioa</h2>
+<audio src="audio.mp3" controls autoplay loop></audio>
+</body> 
+</html>

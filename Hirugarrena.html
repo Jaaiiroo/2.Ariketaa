@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Lorpenak</title>
+    <style>
+        body { font-family: Arial, sans-serif; color: #141212dd; background-color:#ff2f2f}
+        h1 { text-align: center; color: #000000; }
+        h2 { font-size:20px; color: rgb(0, 0, 0)}
+        .parpadeo {
+            width: 300px;
+            height: auto;
+            animation: parpadeo 1s infinite; /* Duración de 1 segundo, se repite indefinidamente */
+        }
+
+        /* Animación parpadeo */
+        @keyframes parpadeo {
+            0%, 100% {
+                opacity: 1; /* Imagen visible */
+            }
+            50% {
+                opacity: 0; /* Imagen invisible en el medio del ciclo */
+            }
+        }
+    </style>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+<body>
+    <h1>Lorpenak</h1>
+    <nav>
+        <a href="Sarrera.html">Sarrera</a>
+        <a href="Lehena.html">Gaur egun</a>
+        <a href="Bigarrena.html">Historikoki</a>
+    </nav>
+    <h2>Bideoa</h2>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/B0BnVCzV7lE?si=bfCZZsBrYZ0X3ur4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <h2>Mugitzen</h2>
+    <marquee>Gora Baskonia!</marquee>
+    <br>
+    <h2>Argazki epikoa</h2>
+    <br>
+    <img src="https://cdn.gigantes.com/wp-content/uploads/2020/08/Baskonia.jpg" alt="Imagen parpadeante" class="parpadeo">
+</body> 
+</html>

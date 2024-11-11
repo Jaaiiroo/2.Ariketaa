@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Gaur egun</title>
+    <style>
+        body { font-family: Arial, sans-serif; color: #141212dd; background-color: #ff2f2f}
+        h1 { text-align: center; color: #000000; }
+        h2 { font-size:20px; color: rgb(0, 0, 0)}
+        /* Cuadro contenedor */
+        .game-container {
+            position: relative;
+            width: 240px;
+            height: 500px;
+            border: 5px solid #fff;
+            border-radius: 15px;
+            background-color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        /* Canvas del juego */
+        canvas {
+            background-color: #4c4c4c;
+            border-radius: 10px;
+        }
+
+        /* Puntaje */
+        #score {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+    </style>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+
+<body>
+    <h1>Gaur egun</h1>
+    <nav>
+        <a href="Sarrera.html">Sarrera</a>
+        <a href="Bigarrena.html">Historikoki</a>
+        <a href="Hirugarrena.html">Lorpenak</a>
+    </nav>
+
+<h2>Top 3 Baskoniako jokalariak</h2>
+<ol>
+    <li>Markus Howard</li>
+    <li>Tadas Sederkeskis</li>
+    <li>Chima Moneke</li>
+</ol>
+
+<h2>Urteak eta estadistikak</h2>
+</table>
+<TABLE BORDER>
+	<TR>
+		<TH>Jokalariak</TH> <TH>Urteak</TH> <TH>PPP</TH>
+	</TR>
+	<TR>
+		<TD>Sederkeskis</TD> <TD>26</TD> <TD>5,4</TD>
+	</TR>
+	<TR>
+		<TD>Diop</TD> <TD>22</TD> <TD>8,3</TD>
+	</TR>
+    <TR>
+        <TD>Moneke</TD> <TD>28</TD> <TD>11</TD>
+    </TR>
+</TABLE>	
+<br>
+<div class="game-container">
+    <div id="score">Puntuación: 0</div>
+    <canvas id="gameCanvas" width="200" height="400"></canvas>
+</div>
+
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const scoreDisplay = document.getElementById("score");
+    const rowCount = 20;
+    const colCount = 10;
+    const blockSize = 20;
+    
+    let board = Array.from({ length: rowCount }, () => Array(colCount).fill(0));
+    let score = 0;
+    let gameInterval;
+
+    // Diferentes formas de piezas
+    const tetrominoes = [
+        [[1, 1, 1, 1]],
+        [[1, 1], [1, 1]],
+        [[0, 1, 1], [1, 1, 0]],
+        [[1, 1, 0], [0, 1, 1]],
+        [[1, 1, 1], [0, 1, 0]],
+        [[1, 1, 1], [1, 0, 0]],
+        [[1, 1, 1], [0, 0, 1]]
+    ];
+
+    let currentPiece, currentPos;
+
+    // Crear una nueva pieza
+    function newPiece() {
+        currentPiece = tetrominoes[Math.floor(Math.random() * tetrominoes.length)];
+        currentPos = { x: 3, y: 0 };
+    }
+
+    // Dibujar el tablero
+    function drawBoard() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        board.forEach((row, y) => {
+            row.forEach((cell, x) => {
+                if (cell) {
+                    ctx.fillStyle = 'cyan';
+                    ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
+                }
+            });
+        });
+    }
+
+    // Dibujar la pieza actual
+    function drawPiece() {
+        ctx.fillStyle = 'orange';
+        currentPiece.forEach((row, y) => {
+            row.forEach((cell, x) => {
+                if (cell) {
+                    ctx.fillRect((currentPos.x + x) * blockSize, (currentPos.y + y) * blockSize, blockSize, blockSize);
+                }
+            });
+        });
+    }
+
+    // Detectar colisión
+    function collision(xOffset, yOffset) {
+        return currentPiece.some((row, y) =>
+            row.some((cell, x) =>
+                cell &&
+                (board[y + currentPos.y + yOffset] &&
+                    board[y + currentPos.y + yOffset][x + currentPos.x + xOffset]) !== 0
+            )
+        );
+    }
+
+    // Fijar la pieza al tablero y eliminar líneas completas
+    function fixPiece() {
+        currentPiece.forEach((row, y) => {
+            row.forEach((cell, x) => {
+                if (cell) {
+                    board[y + currentPos.y][x + currentPos.x] = cell;
+                }
+            });
+        });
+        clearLines();
+        newPiece();
+        if (collision(0, 0)) {
+            alert('Game Over! Puntuación final: ' + score);
+            clearInterval(gameInterval);
+            resetGame();
+        }
+    }
+
+    // Limpiar líneas completas
+    function clearLines() {
+        board = board.reduce((newBoard, row) => {
+            if (row.every(cell => cell !== 0)) {
+                score += 10;
+                scoreDisplay.innerText = "Puntuación: " + score;
+                newBoard.unshift(Array(colCount).fill(0));
+            } else {
+                newBoard.push(row);
+            }
+            return newBoard;
+        }, []);
+    }
+
+    // Mover la pieza hacia abajo
+    function moveDown() {
+        if (!collision(0, 1)) {
+            currentPos.y++;
+        } else {
+            fixPiece();
+        }
+    }
+
+    // Rotar la pieza
+    function rotatePiece() {
+        const newPiece = currentPiece[0].map((_, i) => currentPiece.map(row => row[i])).reverse();
+        const oldPiece = currentPiece;
+        currentPiece = newPiece;
+        if (collision(0, 0)) currentPiece = oldPiece;
+    }
+
+    // Manejo de eventos de teclado
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft' && !collision(-1, 0)) {
+            currentPos.x--;
+        } else if (event.key === 'ArrowRight' && !collision(1, 0)) {
+            currentPos.x++;
+        } else if (event.key === 'ArrowDown') {
+            moveDown();
+        } else if (event.key === 'ArrowUp') {
+            rotatePiece();
+        }
+        draw();
+    });
+
+    // Dibujar el juego
+    function draw() {
+        drawBoard();
+        drawPiece();
+    }
+
+    // Reiniciar el juego
+    function resetGame() {
+        board = Array.from({ length: rowCount }, () => Array(colCount).fill(0));
+        score = 0;
+        scoreDisplay.innerText = "Puntuación: 0";
+        newPiece();
+        if (gameInterval) clearInterval(gameInterval);
+        gameInterval = setInterval(() => {
+            moveDown();
+            draw();
+        }, 500);
+    }
+
+    // Iniciar el juego
+    newPiece();
+    resetGame();
+</script>
+</body>
+
+</html>
